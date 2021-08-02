@@ -1,2 +1,2 @@
 # CoFUNde
-Fun code.
+Some code I wrote during learning how to code.
