@@ -1,2 +1,2 @@
 # CoFUNde
-Some code I wrote during learning how to code.
+Some code I wrote during learning.
