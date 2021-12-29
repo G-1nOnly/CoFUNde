@@ -83,12 +83,18 @@ for i in range(17,24):
 text = turtle.Turtle()
 text.color("deep pink")
 text.penup()
+
+#The code here may need you to modify the parameters to fit the position by setting the values in two "setposition" function.
 text.setposition(10, 350)
-text.write("Merry Christmas to JHMM!", font=(
+text.write("Merry Christmas to xxx!", font=(
     "Apple Chancery", 30, "bold"), align="center")
+#Enter your friend's name
+
 text.setposition(130, 300)
 text.color("red")
-text.write("From 高高小憨", font=("Avenir", 30, "bold"), align="right")
+text.write("From xxx", font=("Avenir", 30, "bold"), align="right")
+#Enter your name
+
 text.hideturtle()    
 time_delay = 0
 start_time = time.time()
