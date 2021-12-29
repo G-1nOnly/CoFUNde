@@ -122,7 +122,6 @@ while True:
         wind_timer = time.time()
         wind_delay = random.randint(*wind_change)/10
     window.update()
-    turtle.exitonclick()
-    break
+    if time.time() - start_time > 0.5:
+        turtle.Terminator()
 
-turtle.Terminator()
