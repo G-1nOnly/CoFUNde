@@ -99,6 +99,9 @@
    # Sum by each row
    np.sum(a, axis = 1, keepdims=True)
    # Sum by each row and keep the dimension
+   
+   np.linalg.norm(a,axis=1,keepdims=True)
+   # Calculate the norm of each row and keep the dimension
    ```
 
 7. #### **Broadcasting**
@@ -155,6 +158,10 @@ The **rules** for broadcasting two arrays:
    x = np.array([[1,2,3], [4,5,6]])
    x = x.reshape((3,2))
    # The shape of x would be reshaped into (3,2)
+   
+   y = np.array([[1], [2], [3]])
+   y = np.squeeze(y)
+   # The result would be [1,2,3], highly practical for plotting.
    ```
 
 
