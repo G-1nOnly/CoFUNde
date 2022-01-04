@@ -190,4 +190,3 @@ The **rules** for broadcasting two arrays:
 
 
 
-
