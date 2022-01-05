@@ -2,6 +2,8 @@
 
 ### **Set_option**
 
+Useful for setting the display format
+
 ```python
 pd.set_option('display.max_columns', 10)
 # Set the max number of columns displayed to be 10
