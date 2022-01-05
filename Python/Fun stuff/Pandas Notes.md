@@ -227,6 +227,40 @@ pd.isin([list])
 # in the DataFrame is contained in values.
 ```
 
+### to_datetime
+
+Useful when dealing with timestamps
+
+```python
+pd.to_datetime(arg,errors='raise', dayfirst=False, yearfirst=False, 
+utc=None, format=None, unit=None, origin='unix')
+```
+
+- **errors**: {'ignore', 'raise', 'coerce'}, default 'raise'
+  - If 'raise', then invalid parsing will raise an exception.
+  - If 'coerce', then invalid parsing will be set as NaT.
+  - If 'ignore', then invalid parsing will return the input.
+
+- **dayfirst**: boolean indicating a date parse order
+
+- **yearfirst**: boolean indicating a date parse order
+
+  if yearfirst and dayfirst is both true, yearfirst is preceded
+
+- **utc**: boolean indicating return utc DatetimeIndex or not
+
+- **format**: The strftime to parse time
+  e.g. “%d/%m/%Y”, note that “%f” will parse all the way up to nanoseconds
+
+- **unit**: The unit of the arg (D,s,ms,us,ns), which is an integer or float number.
+
+- **origin**: Define the reference date. 
+  The numeric values would be parsed as number of units (defined by unit) since this reference date.
+  - If ‘unix’ (or POSIX) time; origin is set to 1970-01-01.
+  - If ‘julian’, unit must be ‘D’, and origin is set to beginning of Julian Calendar. 
+    Julian day number 0 is assigned to the day starting at noon on January 1, 4713 BC.
+  - If Timestamp convertible, origin is set to Timestamp identified by origin.
+
 ### merge
 
 ```python
