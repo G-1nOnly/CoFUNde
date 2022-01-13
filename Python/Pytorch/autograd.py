@@ -1,41 +1,38 @@
 import torch
+import torchvision
 
-x = torch.ones(2, 2, requires_grad=True)
-# set requires_grad=True to track computation with it
-print(x)
-y = x + 2
-print(y)
+x = torch.tensor([2.,3.],requires_grad=True)
+y = torch.tensor([6.,4.],requires_grad=True)
+Q = 3*x**3 - y**2
+g = torch.tensor([1,1],dtype=torch.float) # Only float type could be calculated grad
+Q.backward(gradient=g)
+print(x.grad, y.grad)
 
-z = y * y * 3
-out = z.mean()
-print(z, out)
-out.backward()  # Auto Jacobian since it's noe multidimensional
-print(x.grad)
-
-# Multidimensional tensor would need a vector v to instruct how to differentiate
-X = torch.randn(3, 3, requires_grad=True)
-Y = X * 2
-v = torch.tensor([[0.1, 1.0, 0.0001], [0.1, 1.0, 0.0001], [0.1, 1.0, 0.0001]])
-Y.backward(v)
-print(X.grad)
-
-# Stop the console from printing out the grad
-print((X ** 2).requires_grad)
+x = torch.tensor([1], dtype=torch.float, requires_grad=True)
+# no_grad() thread local
 with torch.no_grad():
-    print((X ** 2).requires_grad)
+    y = x**2
+print(y.requires_grad)   
+y = x.pow(2)
+print(x is y.grad_fn._saved_self) 
+y = x.exp()
+print(y is y.grad_fn._saved_result)
+print(y.equal(y.grad_fn._saved_result))
 
-# Use detach to keep the same content but stop tracking
-Y_new = Y.detach()
-print(Y_new.requires_grad)
+model = torchvision.models.resnet18(pretrained=True)
+data = torch.rand(1,3,64,64)
+labels = torch.rand(1,1000)
+prediction = model(data)
+loss = (prediction-labels).sum()
+loss.backward()
+optim = torch.optim.SGD(model.parameters(),lr=1e-2,momentum=0.9)
+optim.step()
 
-# Profile
-a = torch.randn((1, 1), requires_grad=True)
-with torch.autograd.profiler.profile() as prof:
-    # _ means whatever number could be inserted since it won't be used
-    for _ in range(100):
-        b = a ** 2
-        b = a*2
-        b = a+2
-        b.backward()
-        b.grad
-print(prof.key_averages().table())
+model_new = torchvision.models.resnet18(pretrained=True)
+
+# Freeze all the parameters in the network
+for param in model_new.parameters():
+    param.requires_grad = False
+    
+model_new.fc = torch.nn.Linear(512, 10)
+optimizer = torch.optim.SGD(model_new.parameters(), lr=1e-2, momentum=0.9) # Only optimize the classifier
