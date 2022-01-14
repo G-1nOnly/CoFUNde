@@ -1,35 +1,12 @@
 import torch
-import torchvision
-import torchvision.transforms as transforms
 import torch.nn as nn
 import torch.nn.functional as F
-import matplotlib.pyplot as plt
-import numpy as np
 import torch.optim as optim
 from torch.utils.data import DataLoader
-
-# Preprocessing from CIFAR10
-transform = transforms.Compose(
-    [transforms.ToTensor(),
-     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
-
-batch_size = 4
-
-# num-workers could be set to multi-thread if using main function
-trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
-                                        download=True, transform=transform)
-
-trainloader = DataLoader(trainset, batch_size=batch_size,
-                                          shuffle=True, num_workers=0)
-
-testset = torchvision.datasets.CIFAR10(root='./data', train=False,
-                                       download=True, transform=transform)
-
-testloader = DataLoader(testset, batch_size=batch_size,
-                                         shuffle=True, num_workers=0)
-
-classes = ('plane', 'car', 'bird', 'cat', 'deer',
-           ' dog', 'frog', ' horse', 'ship', 'truck')
+import torchvision
+import torchvision.transforms as transforms
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 # Simple imshow from pytorch tutorial
@@ -61,53 +38,76 @@ class Net(nn.Module):
         return x
 
 
-net = Net()
-criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
-net.zero_grad()
+if __name__ == '__main__':
+    # Preprocessing from CIFAR10
+    transform = transforms.Compose(
+        [transforms.ToTensor(),
+         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
-for epoch in range(10):
-    running_loss = 0.0
-    for i, data in enumerate(trainloader, 0):
-        inputs, labels = data
-        optimizer.zero_grad()
+    batch_size = 4
 
-        outputs = net(inputs)
-        loss = criterion(outputs, labels)
-        loss.backward()
-        optimizer.step()
+    # num-workers could be set to multi-thread if using main function
+    trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
+                                            download=True, transform=transform)
 
-        running_loss = running_loss + loss.item()
-        if i % 2000 == 1999:
-            print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2000:.3f}')
-            running_loss = 0.0
-print("Finished training!")
+    trainloader = DataLoader(trainset, batch_size=batch_size,
+                             shuffle=True, num_workers=2)
 
-PATH = './simple_net.pth'
-torch.save(net.state_dict(), PATH)
+    testset = torchvision.datasets.CIFAR10(root='./data', train=False,
+                                           download=True, transform=transform)
 
-# Testing
-net = Net()
-net.load_state_dict(torch.load(PATH))
-correct = 0
-total = 0
-with torch.no_grad():
-    for data in testloader:
-        input_t, labels = data
-        output_t = net(input_t)
-        _, predicted = torch.max(output_t.data, 1)
-        total = total + labels.size(0)
-        correct = correct + (predicted == labels).sum().item()
+    testloader = DataLoader(testset, batch_size=batch_size,
+                            shuffle=True, num_workers=2)
 
-print(
-    f'Accuracy of the network on testing data: {(100 * correct / total):3f} %')
+    classes = ('plane', 'car', 'bird', 'cat', 'deer',
+               ' dog', 'frog', ' horse', 'ship', 'truck')
+    net = Net()
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9) # Optimizer here could be modified
+    net.zero_grad()
 
-# Random image
-dataiter = iter(testloader)
-images, labels = dataiter.next()
-imshow(torchvision.utils.make_grid(images))
-print('GroundTruth: ', ' '.join(f'{classes[labels[j]]:5s}' for j in range(4)))
+    for epoch in range(10):
+        running_loss = 0.0
+        for i, data in enumerate(trainloader, 0):
+            inputs, labels = data
+            optimizer.zero_grad()
 
-outputs = net(images)
-_, predicted = torch.max(outputs, 1)
-print('Predicted: ', ' '.join(f'{classes[predicted[j]]:5s}' for j in range(4)))
+            outputs = net(inputs)
+            loss = criterion(outputs, labels)
+            loss.backward()
+            optimizer.step()
+
+            running_loss = running_loss + loss.item()
+            if i % 2000 == 1999:
+                print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2000:.3f}')
+                running_loss = 0.0
+    print("Finished training!")
+
+    PATH = './simple_net.pth'
+    torch.save(net.state_dict(), PATH)
+
+    # Testing
+    net = Net()
+    net.load_state_dict(torch.load(PATH))
+    correct = 0
+    total = 0
+    with torch.no_grad():
+        for data in testloader:
+            input_t, labels = data
+            output_t = net(input_t)
+            _, predicted = torch.max(output_t.data, 1)
+            total = total + labels.size(0)
+            correct = correct + (predicted == labels).sum().item()
+
+    print(f'Accuracy of the network on testing data: {(100 * correct / total):3f} %')
+
+    # Random image
+    dataiter = iter(testloader)
+    images, labels = dataiter.next()
+    imshow(torchvision.utils.make_grid(images))
+    print('GroundTruth: ', ' '.join(
+        f'{classes[labels[j]]:5s}' for j in range(4)))
+
+    outputs = net(images)
+    _, predicted = torch.max(outputs, 1)
+    print('Predicted: ', ' '.join(f'{classes[predicted[j]]:5s}' for j in range(4)))
