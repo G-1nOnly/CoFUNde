@@ -6,6 +6,7 @@ import torch.nn.functional as F
 import matplotlib.pyplot as plt
 import numpy as np
 import torch.optim as optim
+from torch.utils.data import DataLoader
 
 # Preprocessing from CIFAR10
 transform = transforms.Compose(
@@ -18,13 +19,13 @@ batch_size = 4
 trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
                                         download=True, transform=transform)
 
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size,
+trainloader = DataLoader(trainset, batch_size=batch_size,
                                           shuffle=True, num_workers=0)
 
 testset = torchvision.datasets.CIFAR10(root='./data', train=False,
                                        download=True, transform=transform)
 
-testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size,
+testloader = DataLoader(testset, batch_size=batch_size,
                                          shuffle=True, num_workers=0)
 
 classes = ('plane', 'car', 'bird', 'cat', 'deer',
