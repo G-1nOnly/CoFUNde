@@ -99,7 +99,7 @@ if __name__ == '__main__':
             total = total + labels.size(0)
             correct = correct + (predicted == labels).sum().item()
 
-    print(f'Accuracy of the network on testing data: {(100 * correct / total):3f} %')
+    print(f'Accuracy of the network on testing data: {(100 * correct / total):.3f} %')
 
     # Random image
     dataiter = iter(testloader)
