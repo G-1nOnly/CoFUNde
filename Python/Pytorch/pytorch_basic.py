@@ -74,3 +74,17 @@ b = torch.rand(3, 256, 256)
 c = b.unsqueeze(0) # Add to the 0 dimension
 print(b.shape)
 print(c.shape)
+
+def exp_adder(x, y):
+    return 2 * x.exp() + y.pow(2)
+
+
+inputs = (torch.tensor([1.]), torch.tensor([1.]))
+g_input = (torch.tensor([1.]), torch.tensor([0.1]))
+d1 = torch.autograd.functional.jacobian(exp_adder, inputs)
+d2 = torch.autograd.functional.hessian(exp_adder, inputs)
+# If using hessian, the function should be twice-differentiable
+d3 = torch.autograd.functional.jvp(exp_adder, inputs, v=g_input)
+# Directly calculate the vetcor_jacobian product
+# There are also "vjp" which calculated the reverse and "hvp" along with "vhp".
+print(d1, '\n', d2, '\n', d3)
