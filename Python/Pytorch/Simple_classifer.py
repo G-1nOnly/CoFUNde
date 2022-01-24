@@ -38,6 +38,45 @@ class Net(nn.Module):
         return x
 
 
+def net_train(epoch,batch_size, training_loader, model, criterion, optimizer):
+    for e in range(epoch):
+        running_loss = 0.0
+        last_loss = 0.0
+        for i, data in enumerate(training_loader):
+            inputs, labels = data
+            optimizer.zero_grad()
+            outputs = model(inputs)
+            loss = criterion(outputs, labels)
+            loss.backward()
+            optimizer.step()
+
+            running_loss = running_loss + loss.item()
+            if i % batch_size == batch_size - 1:
+                last_loss = running_loss/batch_size
+                print(f'[{e + 1}, {i + 1:5d}] loss: {last_loss:.3f}')
+                running_loss = 0.0
+        if e % epoch == epoch - 1:
+            print(f"Finished Training for {epoch} epochs.")
+            
+    return last_loss  # Return value could be used when applying validation set
+
+
+def net_test(testing_loader, model):
+    # Remember to use net.train(False) or net.eval()
+    # net.train(False) would affect dropout and BN(Batch normalization)
+    correct = 0
+    total = 0
+    with torch.no_grad():
+        for data in testing_loader:
+            input_t, labels = data
+            output_t = model(input_t)
+            _, predicted = torch.max(output_t.data, 1)
+            total = total + labels.size(0)
+            correct = correct + (predicted == labels).sum().item()
+
+    print(f'Accuracy of the network on testing data: {(100 * correct / total):.3f} %')    
+    
+    
 if __name__ == '__main__':
     # Preprocessing from CIFAR10
     transform = transforms.Compose(
