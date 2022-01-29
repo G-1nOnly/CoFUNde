@@ -39,6 +39,7 @@ class Net(nn.Module):
 
 
 def net_train(epoch,batch_size, training_loader, model, criterion, optimizer):
+    model.train()
     for e in range(epoch):
         running_loss = 0.0
         last_loss = 0.0
@@ -64,6 +65,7 @@ def net_train(epoch,batch_size, training_loader, model, criterion, optimizer):
 def net_test(testing_loader, model):
     # Remember to use net.train(False) or net.eval()
     # net.train(False) would affect dropout and BN(Batch normalization)
+    model.eval()
     correct = 0
     total = 0
     with torch.no_grad():
