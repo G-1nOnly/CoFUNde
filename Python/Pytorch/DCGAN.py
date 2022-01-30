@@ -48,8 +48,6 @@ torch.manual_seed(manualSeed)
 # custom weights initialization called on netG and netD
 # From the DCGAN paper, the authors specify that all model weights
 # shall be randomly initialized from a Normal distribution with mean=0, stdev=0.02.
-
-
 def weights_init(m):
     classname = m.__class__.__name__
     if classname.find('Conv') != -1:
@@ -213,13 +211,11 @@ def plot_stats(G_losses, D_losses):
 
 
 def plot_G(img_list):
-    # Visualization of G’s progression
+    # Visualization of Generator’s progression
     fig = plt.figure(figsize=(8, 8))
     plt.axis("off")
-    ims = [[plt.imshow(np.transpose(i, (1, 2, 0)), animated=True)]
-           for i in img_list]
-    ani = animation.ArtistAnimation(
-        fig, ims, interval=1000, repeat_delay=1000, blit=True)
+    ims = [[plt.imshow(np.transpose(i, (1, 2, 0)), animated=True)] for i in img_list]
+    ani = animation.ArtistAnimation(fig, ims, interval=1000, repeat_delay=1000, blit=True)
     HTML(ani.to_jshtml())
 
 
@@ -231,8 +227,7 @@ def plot_comparison(device, dataloader, img_list):
     plt.subplot(1, 2, 1)
     plt.axis("off")
     plt.title("Real Images")
-    plt.imshow(np.transpose(vutils.make_grid(real_batch[0].to(device)[
-               :64], padding=5, normalize=True).cpu(), (1, 2, 0)))
+    plt.imshow(np.transpose(vutils.make_grid(real_batch[0].to(device)[:64], padding=5, normalize=True).cpu(), (1, 2, 0)))
 
     # Plot the fake images from the last epoch
     plt.subplot(1, 2, 2)
@@ -289,7 +284,7 @@ if __name__ == '__main__':
                                          criterion, optimizerD, optimizerG, fixed_noise)
 
     plot_stats(G_losses, D_losses)
-
+    
     plot_G(img_list)
-
+    
     plot_comparison(device, dataloader, img_list)
