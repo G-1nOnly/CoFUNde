@@ -88,9 +88,8 @@ class Generator(nn.Module):
     def forward(self, input):
         return self.main(input)
 
+    
 # Discriminator code
-
-
 class Discriminator(nn.Module):
     def __init__(self, ngpu):
         super(Discriminator, self).__init__()
