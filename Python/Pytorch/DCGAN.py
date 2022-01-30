@@ -191,8 +191,7 @@ def train(dataloader, device, netD, netG, real_label, fake_label, criterion, opt
             if (iters % 500 == 0) or ((epoch == num_epochs-1) and (i == len(dataloader)-1)):
                 with torch.no_grad():
                     fake = netG(fixed_noise).detach().cpu()
-                img_list.append(vutils.make_grid(
-                    fake, padding=2, normalize=True))
+                img_list.append(vutils.make_grid(fake, padding=2, normalize=True))
             iters += 1
 
     return G_losses, D_losses, img_list
