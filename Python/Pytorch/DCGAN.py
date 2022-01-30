@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.nn.parallel
 import torch.optim as optim
 from torch.utils.data import DataLoader
-import torchvision.datasets as dset
+import torchvision.datasets as dataset
 import torchvision.transforms as transforms
 import torchvision.utils as vutils
 import numpy as np
@@ -241,16 +241,13 @@ if __name__ == '__main__':
     data_transform = transforms.Compose([transforms.Resize(image_size),
                                          transforms.CenterCrop(image_size),
                                          transforms.ToTensor(),
-                                         transforms.Normalize(
-                                             (0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+                                         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
                                          ])
 
-    dataset = dset.ImageFolder(root=dataroot, transform=data_transform)
-    dataloader = DataLoader(dataset, batch_size=batch_size,
-                            shuffle=True, num_workers=workers)
+    dataset = dataset.ImageFolder(root=dataroot, transform=data_transform)
+    dataloader = DataLoader(dataset, batch_size=batch_size,shuffle=True, num_workers=workers)
 
-    device = torch.device("cuda:0" if (
-        torch.cuda.is_available() and ngpu > 0) else "cpu")
+    device = torch.device("cuda:0" if (torch.cuda.is_available() and ngpu > 0) else "cpu")
     print(device)
 
     # Instantiation of the generator and discriminator
