@@ -216,7 +216,8 @@ def plot_G(img_list):
     plt.axis("off")
     ims = [[plt.imshow(np.transpose(i, (1, 2, 0)), animated=True)] for i in img_list]
     ani = animation.ArtistAnimation(fig, ims, interval=1000, repeat_delay=1000, blit=True)
-    HTML(ani.to_jshtml())
+    with open("Progression.html", "w") as f:
+        print(ani.to_jshtml(), file=f)
 
 
 def plot_comparison(device, dataloader, img_list):
