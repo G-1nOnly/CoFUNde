@@ -40,11 +40,6 @@ beta1 = 0.5
 # Number of GPUs available. Use 0 for CPU mode.
 ngpu = 1
 
-# Seed
-manualSeed = 999
-random.seed(manualSeed)
-torch.manual_seed(manualSeed)
-
 # custom weights initialization called on netG and netD
 # From the DCGAN paper, the authors specify that all model weights
 # shall be randomly initialized from a Normal distribution with mean=0, stdev=0.02.
@@ -237,7 +232,12 @@ def plot_comparison(device, dataloader, img_list):
 
 
 if __name__ == '__main__':
+    # Seed  
+    manualSeed = 999
+    random.seed(manualSeed)
+    torch.manual_seed(manualSeed)
     print("Random Seed: ", manualSeed)
+    
     data_transform = transforms.Compose([transforms.Resize(image_size),
                                          transforms.CenterCrop(image_size),
                                          transforms.ToTensor(),
