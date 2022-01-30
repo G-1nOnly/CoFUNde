@@ -220,7 +220,7 @@ def plot_G(img_list):
            for i in img_list]
     ani = animation.ArtistAnimation(
         fig, ims, interval=1000, repeat_delay=1000, blit=True)
-    return ani
+    HTML(ani.to_jshtml())
 
 
 def plot_comparison(device, dataloader, img_list):
@@ -290,7 +290,6 @@ if __name__ == '__main__':
 
     plot_stats(G_losses, D_losses)
 
-    ani = plot_G(img_list)
-    HTML(ani.to_jshtml())
+    plot_G(img_list)
 
     plot_comparison(device, dataloader, img_list)
