@@ -48,13 +48,13 @@ torch.manual_seed(manualSeed)
 # custom weights initialization called on netG and netD
 # From the DCGAN paper, the authors specify that all model weights
 # shall be randomly initialized from a Normal distribution with mean=0, stdev=0.02.
-def weights_init(m):
-    classname = m.__class__.__name__
+def weights_init(net):
+    classname = net.__class__.__name__
     if classname.find('Conv') != -1:
-        nn.init.normal_(m.weight.data, 0.0, 0.02)
+        nn.init.normal_(net.weight.data, 0.0, 0.02)
     elif classname.find('BatchNorm') != -1:
-        nn.init.normal_(m.weight.data, 1.0, 0.02)
-        nn.init.constant_(m.bias.data, 0)
+        nn.init.normal_(net.weight.data, 1.0, 0.02)
+        nn.init.constant_(net.bias.data, 0)
 
 
 # Generator Code
