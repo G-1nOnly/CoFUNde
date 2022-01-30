@@ -267,8 +267,8 @@ if __name__ == '__main__':
     print(netD)
 
     criterion = nn.BCELoss()
-    # Create batch of latent vectors that we will use to visualize
-    #  the progression of the generator
+    
+    # Create batch of latent vectors that we will use to visualize the progression of the generator
     fixed_noise = torch.randn(64, nz, 1, 1, device=device)
 
     real_label = 1
