@@ -41,6 +41,16 @@ class Net(nn.Module):
         self.fc[2].bias.data.copy_(torch.tensor([1., 0., 0., 0., 1., 0.]))
 
 
+    def forward(self, x):
+        x = self.stn(x)
+        x = F.relu(F.max_pool2d(self.conv1(x), 2))
+        x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
+        x = x.view(-1, 320)
+        x = F.relu(self.fc1(x))
+        x = F.dropout(x, training=self.training)
+        x = self.fc2(x)
+        return F.log_softmax(x, dim=1)
+    
     def stn(self, x):
         x_t = self.localization(x)
         x_t = x_t.view(-1, 10 * 3 * 3)
@@ -51,17 +61,6 @@ class Net(nn.Module):
         x = F.grid_sample(x, grid,align_corners=True)
 
         return x
-
-
-    def forward(self, x):
-        x = self.stn(x)
-        x = F.relu(F.max_pool2d(self.conv1(x), 2))
-        x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
-        x = x.view(-1, 320)
-        x = F.relu(self.fc1(x))
-        x = F.dropout(x, training=self.training)
-        x = self.fc2(x)
-        return F.log_softmax(x, dim=1)
 
 
 def train(epoch,device,train_loader,model,optimizer,criterion):
